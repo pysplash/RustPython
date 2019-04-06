@@ -118,6 +118,18 @@ impl<T: Clone> Dict<T> {
         self.len() == 0
     }
 
+    pub fn next_entry(&self, position: usize) -> Option<(usize, PyObjectRef, T)> {
+        let mut new_position = position;
+        while position < self.entries.len() {
+            if let Some(DictEntry { key, value, .. }) = &self.entries[position] {
+                return Some((new_position + 1, key.clone(), value.clone()));
+            } else {
+                new_position += 1;
+            }
+        }
+        None
+    }
+
     pub fn get_items(&self) -> Vec<(PyObjectRef, T)> {
         self.entries
             .iter()
